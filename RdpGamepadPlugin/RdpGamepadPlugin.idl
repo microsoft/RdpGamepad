@@ -1,0 +1,34 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	object,
+	uuid(26D191A0-86BC-4921-9D45-98B8D0BA4324),
+	dual,
+	nonextensible,
+	pointer_default(unique)
+]
+interface IRdpGamepadPlugin : IDispatch
+{
+};
+
+[
+	uuid(59C34EF3-3571-4373-AA2B-5E66B799FAE2),
+	version(1.0),
+]
+library RdpGamepadPluginLib
+{
+	importlib("stdole2.tlb");
+
+	[
+		uuid(F0A2B015-0002-419B-87AB-E0F6A6A3BD00)
+	]
+	coclass RdpGamepadPlugin
+	{
+		[default] interface IRdpGamepadPlugin;
+	};
+};
+

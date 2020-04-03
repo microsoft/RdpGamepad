@@ -1,0 +1,49 @@
+HKCR
+{
+	RdpGamepadPlugin.RdpGamepadPlugin.1 = s 'RdpGamepadPlugin Class'
+	{
+		CLSID = s '{F0A2B015-0002-419B-87AB-E0F6A6A3BD00}'
+	}
+	RdpGamepadPlugin.RdpGamepadPlugin = s 'RdpGamepadPlugin Class'
+	{
+		CurVer = s 'RdpGamepadPlugin.RdpGamepadPlugin.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {F0A2B015-0002-419B-87AB-E0F6A6A3BD00} = s 'RdpGamepadPlugin Class'
+		{
+			ProgID = s 'RdpGamepadPlugin.RdpGamepadPlugin.1'
+			VersionIndependentProgID = s 'RdpGamepadPlugin.RdpGamepadPlugin'
+			ForceRemove Programmable
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Free'
+			}
+			TypeLib = s '{59C34EF3-3571-4373-AA2B-5E66B799FAE2}'
+			Version = s '1.0'
+		}
+	}
+}
+
+HKCU
+{
+	Software
+	{
+		Microsoft
+		{
+			'Terminal Server Client'
+			{
+				Default
+				{
+					AddIns
+					{
+						RdpGamepadPlugin
+						{
+							val Name = s '{F0A2B015-0002-419B-87AB-E0F6A6A3BD00}'
+						}
+					}
+				}
+			}
+		}
+	}
+}
