@@ -126,7 +126,7 @@ private:
 												 GetSystemMetrics(SM_CXSMICON),
 												 GetSystemMetrics(SM_CYSMICON),
 												 LR_DEFAULTCOLOR);
-		StringCchCopy(mNotifyIconData.szTip, ARRAYSIZE(mNotifyIconData.szTip), L"Remote Desktop Gamepad");
+		StringCchCopy(mNotifyIconData.szTip, ARRAYSIZE(mNotifyIconData.szTip), L"Microsoft Remote Desktop Gamepad Receiver");
 	}
 
 	void ShowNotifyIcon()
