@@ -1,0 +1,13 @@
+{"Registrations":[ 
+    {
+      "component": { 
+       "type": "git", 
+       "git": { 
+         "repositoryUrl": "https://github.com/ViGEm/ViGEmClient.git", 
+         "commitHash": "d466227688a9d2fbd437f4b9712c596a6547ec2b" 
+         }
+       }
+    }
+ ],
+ "Version": 1
+}
