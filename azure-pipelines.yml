@@ -26,14 +26,14 @@ steps:
   inputs:
     solution: 'RdpGamepad.sln'
     vsVersion: '16.0'
-    platform: 'Win32'
+    platform: 'x86'
     configuration: 'Debug'
 - task: VSBuild@1
   displayName: Build Release x86
   inputs:
     solution: 'RdpGamepad.sln'
     vsVersion: '16.0'
-    platform: 'Win32'
+    platform: 'x86'
     configuration: 'Release'
 - task: ComponentGovernanceComponentDetection@0
   inputs:
