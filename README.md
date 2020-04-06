@@ -1,5 +1,7 @@
 # RdpGamepad - a Remote Desktop Plugin for Xbox Gamepads
 
+[![Build Status](https://dev.azure.com/ms/RdpGamepad/_apis/build/status/microsoft.RdpGamepad?branchName=master)](https://dev.azure.com/ms/RdpGamepad/_build/latest?definitionId=340&branchName=master)
+
 A Remote Desktop plugin to enable remote use of Xbox gamepads across a Remote Desktop session.
 
 ## Download and Install
