@@ -35,7 +35,8 @@ kernel mode driver. It uses the [ViGEmClient](https://github.com/ViGEm/ViGEmClie
 ## Build from Source
 
 To build and install the Remote Desktop Gamepad Plugin yourself, clone the sources (including submodules),
-open the solution file in Visual Studio, and build the solution for your platform architecture (Win32 or x64).
+open the solution file in Visual Studio 2019 ([Community Edition](https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=Community&rel=16)
+is fine), and build the solution for your platform architecture (Win32 or x64).
 The output files will be under `bin\Release`.
 
 To register the plugin with Remote Desktop, open and administrative command prompt and navigate to the
