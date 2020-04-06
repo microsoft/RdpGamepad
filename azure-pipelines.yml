@@ -1,0 +1,42 @@
+trigger:
+- master
+
+pool:
+  vmImage: 'windows-2019'
+
+steps:
+- checkout: self
+  submodules: true
+- task: VSBuild@1
+  displayName: Build Debug x64
+  inputs:
+    solution: 'RdpGamepad.sln'
+    vsVersion: '16.0'
+    platform: 'x64'
+    configuration: 'Debug'
+- task: VSBuild@1
+  displayName: Build Release x64
+  inputs:
+    solution: 'RdpGamepad.sln'
+    vsVersion: '16.0'
+    platform: 'x64'
+    configuration: 'Release'
+- task: VSBuild@1
+  displayName: Build Debug x86
+  inputs:
+    solution: 'RdpGamepad.sln'
+    vsVersion: '16.0'
+    platform: 'Win32'
+    configuration: 'Debug'
+- task: VSBuild@1
+  displayName: Build Release x86
+  inputs:
+    solution: 'RdpGamepad.sln'
+    vsVersion: '16.0'
+    platform: 'Win32'
+    configuration: 'Release'
+- task: ComponentGovernanceComponentDetection@0
+  inputs:
+    scanType: 'Register'
+    verbosity: 'Verbose'
+    alertWarningLevel: 'High'
