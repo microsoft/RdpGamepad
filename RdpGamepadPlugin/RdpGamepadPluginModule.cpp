@@ -2,15 +2,30 @@
 // Licensed under the MIT License.
 
 #include "pch.h"
+
 #include "resource.h"
 #include "RdpGamepadPlugin_i.h"
 #include "RdpGamepadPluginModule.h"
+#include "DynamicXInput.h"
 
 CRdpGamepadPluginModule _AtlModule;
 
 BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 {
 	hInstance;
+
+	if (dwReason == DLL_PROCESS_ATTACH)
+	{
+		if (!LoadXInput())
+		{
+			return FALSE;
+		}
+	}
+	else if (dwReason == DLL_PROCESS_DETACH)
+	{
+		UnloadXInput();
+	}
+
 	return _AtlModule.DllMain(dwReason, lpReserved);
 }
 

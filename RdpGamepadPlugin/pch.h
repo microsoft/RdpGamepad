@@ -27,4 +27,5 @@
 #include <chrono>
 #include <functional>
 #include <map>
+#include <type_traits>
 #include <vector>
