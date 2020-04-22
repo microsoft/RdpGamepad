@@ -7,7 +7,7 @@
 #define MyAppPublisher "Microsoft Corporation"
 #define MyAppPublisherURL "https://www.microsoft.com"
 #define MyAppURL "https://github.com/Microsoft/RdpGamepad"
-#define MyAppVersion "1.0.0"
+#define MyAppVersion "1.0.1"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
