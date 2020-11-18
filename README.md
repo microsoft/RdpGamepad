@@ -23,6 +23,17 @@ You don't. The plugin is automatically loaded by Remote Desktop and the receiver
 automatically when you start a remote desktop session. A virtual Xbox 360 controller is attached to
 the remote computer when the connection is established.
 
+## Troubleshooting
+
+### "It doesn't work"
+* Symptom: It is often reported that the controller doesn't work after connecting to a remote computer.
+* Cause: The receiver on the remote computer _adds_ a new virtual controller to remote computer. It is
+  often the case that a game or game engine is using "the first" controller which would default to any
+  controller that is physically attached to the remote computer.
+* Solution: Unplug any attached controller form the remote computer. This can be done by physically
+  disconnecting the controller from the remote computer or by disabling the device using Device Manager
+  on the remote computer.
+
 ## About the Source
 
 The `RdpGamepadPlugin` project contains the Remote Desktop plugin that reads the local gamepad
