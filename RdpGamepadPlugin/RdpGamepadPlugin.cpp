@@ -85,6 +85,11 @@ HRESULT CRdpGamepadChannel::OnDataReceived(ULONG cbSize, BYTE* pBuffer)
 		return RdpGamepad::RDPGAMEPAD_E_PROTOCOL;
 	}
 
+	if (cbSize > sizeof(RdpGamepad::RdpProtocolPacket)) 
+	{
+		return RdpGamepad::RDPGAMEPAD_E_PROTOCOL;
+	}
+	
 	// We know nothing of the alignment of pBuffer so we need to copy it into our protocol packet instead of just casting it.
 	RdpGamepad::RdpProtocolPacket packet;
 	std::memcpy(&packet, pBuffer, cbSize);
