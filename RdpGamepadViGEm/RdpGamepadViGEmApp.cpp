@@ -9,11 +9,13 @@
 #include <shellapi.h>
 
 static constexpr UINT RDPGAMEPAD_NOTIFY_MESSAGE = WM_APP + 100;
+static constexpr UINT RDPGAMEPAD_CONNECTION_UPDATE_MESSAGE = WM_APP + 101;
 
 class RdpGamepadViGEmApp
 {
 public:
 	RdpGamepadViGEmApp()
+		: mRdpProcessor(std::bind(&RdpGamepadViGEmApp::ConnectionStateChanged, this))
 	{
 		mRdpProcessor.Start();
 	}
@@ -41,6 +43,7 @@ public:
 		HideNotifyIcon();
 		ReleaseSingleAppMutex();
 
+		mWnd = nullptr;
 		return ret;
 	}
 
@@ -73,6 +76,7 @@ private:
 	{
 		ReleaseMutex(mGlobalMutex);
 		CloseHandle(mGlobalMutex);
+		mGlobalMutex = nullptr;
 	}
 
 	void RegisterWindowClass()
@@ -126,7 +130,15 @@ private:
 												 GetSystemMetrics(SM_CXSMICON),
 												 GetSystemMetrics(SM_CYSMICON),
 												 LR_DEFAULTCOLOR);
-		StringCchCopy(mNotifyIconData.szTip, ARRAYSIZE(mNotifyIconData.szTip), L"Microsoft Remote Desktop Gamepad Receiver");
+
+		UpdateToolTip();
+	}
+
+	void UpdateToolTip()
+	{
+		LPCWSTR szTip = mRdpProcessor.IsConnected() ? L"Microsoft Remote Desktop Gamepad Receiver - Connected"
+													: L"Microsoft Remote Desktop Gamepad Receiver - Disconnected";
+		StringCchCopy(mNotifyIconData.szTip, ARRAYSIZE(mNotifyIconData.szTip), szTip);
 	}
 
 	void ShowNotifyIcon()
@@ -138,6 +150,19 @@ private:
 	void HideNotifyIcon()
 	{
 		Shell_NotifyIcon(NIM_DELETE, &mNotifyIconData);
+	}
+
+	void UpdateNotifyIcon()
+	{
+		Shell_NotifyIcon(NIM_MODIFY, &mNotifyIconData);
+	}
+
+	void ConnectionStateChanged()
+	{
+		if (mWnd != nullptr)
+		{
+			PostMessage(mWnd, RDPGAMEPAD_CONNECTION_UPDATE_MESSAGE, 0, 0);
+		}
 	}
 
 	void ShowPopupMenu()
@@ -198,6 +223,11 @@ private:
 			}
 			break;
 
+		case RDPGAMEPAD_CONNECTION_UPDATE_MESSAGE:
+			UpdateToolTip();
+			UpdateNotifyIcon();
+			break;
+
 		case WM_DESTROY:
 			HideNotifyIcon();
 			PostQuitMessage(0);
@@ -220,7 +250,7 @@ private:
 	}
 };
 
-int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
+int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nShowCmd)
 {
 	RdpGamepadViGEmApp TheApp;
 	return TheApp.Run(hInstance);

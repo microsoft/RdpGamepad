@@ -8,8 +8,9 @@
 #include "ViGEmInterface.h"
 #include <RdpGamepadProtocol.h>
 
-RdpGamepadProcessor::RdpGamepadProcessor()
-	: mRdpGamepadChannel(new RdpGamepad::RdpGamepadVirtualChannel())
+RdpGamepadProcessor::RdpGamepadProcessor(std::function<void()> ConnectionStateCallback)
+	: mConnectionStateCallback(std::move(ConnectionStateCallback))
+	, mRdpGamepadChannel(new RdpGamepad::RdpGamepadVirtualChannel())
 	, mViGEmClient(std::make_shared<ViGEmClient>())
 {}
 
@@ -31,6 +32,12 @@ void RdpGamepadProcessor::Stop()
 	mThread.join();
 }
 
+bool RdpGamepadProcessor::IsConnected() const
+{
+	std::unique_lock<std::mutex> lock{mMutex};
+	return mRdpGamepadConnected;
+}
+
 void RdpGamepadProcessor::Run()
 {
 	static constexpr int PollFrequency = 16; // ms
@@ -40,12 +47,19 @@ void RdpGamepadProcessor::Run()
 	DueTime.QuadPart = -1;
 
 	TimerEvent = CreateWaitableTimerEx(NULL, NULL, 0, TIMER_ALL_ACCESS);
+	if (TimerEvent == nullptr)
+	{
+		RdpGamepadTidy();
+		return;
+	}
+
 	SetWaitableTimer(TimerEvent, &DueTime, PollFrequency, NULL, NULL, false);
 
 	std::unique_lock<std::mutex> lock{mMutex};
 	while (mKeepRunning)
 	{
 		mMutex.unlock();
+		TriggerConnectionStateCallback();
 		const unsigned long WaitResult = WaitForSingleObject(TimerEvent, PollFrequency * 2);
 		mMutex.lock();
 
@@ -62,10 +76,15 @@ void RdpGamepadProcessor::Run()
 
 void RdpGamepadProcessor::RdpGamepadTidy()
 {
+	bool bWasConnected = mRdpGamepadConnected;
 	mViGEmTarget360 = nullptr;
 	mRdpGamepadChannel->Close();
 	mRdpGamepadConnected = false;
 	mRdpGamepadPollTicks = 0;
+	if (bWasConnected)
+	{
+		mConnectionStateCallbackPending = true;
+	}
 }
 
 void RdpGamepadProcessor::RdpGamepadProcess()
@@ -101,6 +120,7 @@ void RdpGamepadProcessor::RdpGamepadProcess()
 		//assert(mViGEmTarget360 == nullptr)
 		mViGEmTarget360 = mViGEmClient->CreateController();
 		mRdpGamepadConnected = true;
+		mConnectionStateCallbackPending = true;
 	}
 
 	// Request controller state and update vibration
@@ -152,5 +172,14 @@ void RdpGamepadProcessor::RdpGamepadProcess()
 	if (!mRdpGamepadChannel->IsOpen())
 	{
 		RdpGamepadTidy();
+	}
+}
+
+void RdpGamepadProcessor::TriggerConnectionStateCallback()
+{
+	if (mConnectionStateCallbackPending && mConnectionStateCallback)
+	{
+		mConnectionStateCallback();
+		mConnectionStateCallbackPending = false;
 	}
 }
