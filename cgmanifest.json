@@ -1,13 +1,15 @@
-{"Registrations":[ 
+{
+  "$schema": "https://json.schemastore.org/component-detection-manifest.json",
+  "Registrations": [
     {
-      "component": { 
-       "type": "git", 
-       "git": { 
-         "repositoryUrl": "https://github.com/ViGEm/ViGEmClient.git", 
-         "commitHash": "d466227688a9d2fbd437f4b9712c596a6547ec2b" 
-         }
-       }
+      "component": {
+        "type": "git",
+        "git": {
+          "repositoryUrl": "https://github.com/ViGEm/ViGEmClient.git",
+          "commitHash": "d466227688a9d2fbd437f4b9712c596a6547ec2b"
+        }
+      }
     }
- ],
- "Version": 1
+  ],
+  "Version": 1
 }
